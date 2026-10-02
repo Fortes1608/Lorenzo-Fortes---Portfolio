@@ -29,7 +29,13 @@ const products = [
     screenshots: ["/pip1.png", "/pip2.png", "/pip3.png", "/pip4.png"],
     screenshotLayout: "portrait" as const,
     details:
-      "Pip is a fitness tracker for people who want to see change that a bathroom scale cannot show. Twice a week you take a front and a side photo, guided out loud by a 10-second timer, and Pip estimates your body fat as an honest range, then tracks the weekly trend and the fat versus lean mass breakdown. Everything is analyzed on the device: Apple Vision finds the body outline, the waist is estimated from both photos and fed into a Relative Fat Mass formula recalibrated on NHANES DXA data. Photos never leave the iPhone, are excluded from backups and can be locked with Face ID. The product is deliberately gentle: no red numbers, no ideal body, one check-in per day, and a mascot that celebrates consistency instead of numbers. It integrates with Apple Health, has a free first check-in with a Plus subscription, and ships in English, Portuguese and Spanish.",
+      "Fitness tracker that estimates body fat as a range from two weekly photos, entirely on-device.",
+    highlights: [
+      "On-device pipeline: Apple Vision body outline, waist estimate and a Relative Fat Mass formula recalibrated on NHANES DXA data",
+      "Photos never leave the iPhone: file-protected, excluded from backups and lockable with Face ID",
+      "Gentle by design: ranges instead of decimals, no red numbers, one check-in per day, a mascot that rewards consistency",
+      "Apple Health integration, free first check-in with a Plus subscription (StoreKit 2), in English, Portuguese and Spanish",
+    ],
   },
   {
     id: "project-seven",
@@ -44,7 +50,13 @@ const products = [
     screenshots: ["/novacula1.png", "/novacula2.png", "/novacula3.png", "/novacula4.png"],
     screenshotLayout: "portrait" as const,
     details:
-      "Novacula is a men's grooming app. You take two guided photos and the app returns your hair type (1A to 4C), your face shape and a plan: haircuts that suit you with instructions to show the barber, a beard style, a care routine with reminders and streaks, and product recommendations. Photo quality is checked locally with Apple Vision and the face shape teaser is estimated on the device; the full analysis goes through a Supabase Edge Function proxy that calls a vision model, with explicit AI consent, photos kept only in memory and no user accounts. Subscriptions run on RevenueCat with a trial, a vintage barbershop design system (custom type, tokens and motion), full PT-BR and English localization and XcodeGen-generated projects. Still in development, with a large scope already defined and implemented across the planned milestones.",
+      "Men's grooming app: two guided photos in, hair type (1A to 4C), face shape and a full haircut, beard and routine plan out.",
+    highlights: [
+      "Photo quality check and face shape teaser run locally with Apple Vision; the full analysis goes through a Supabase Edge Function proxy to a vision model",
+      "Privacy first: explicit AI consent, photos kept only in memory, no user accounts",
+      "Care routine with reminders and streaks, barber-ready haircut cards and product recommendations",
+      "RevenueCat subscriptions with a trial, a vintage barbershop design system and full PT-BR / English localization",
+    ],
   },
   {
     id: "project-nine",
@@ -59,7 +71,14 @@ const products = [
     screenshots: ["/ennoa1.png", "/ennoa2.png"],
     screenshotLayout: "portrait" as const,
     details:
-      "Ennoa is an iOS app that supports therapeutic continuity for adults. It turns notes that would be lost in daily life, such as a thought after a meeting, a dream on waking or an achievement worth recognizing, into a personal, organized memory. The experience adapts to the person's approach: a practical CBT mode for situations, thoughts and emotions, a freer psychodynamic mode for dreams and associations, a systemic mode for relationships and contexts, and a general mode. People can search and filter their timeline, and select entries to export as a local PDF shared through the native share sheet. Privacy is part of the product: offline-first with protected local data, optional sync with Supabase and row-level security, no AI interpretation, no diagnosis and nothing shared automatically. Built by a team, with local backups, conflict resolution for sync and a large unit test suite. Still in development.",
+      "A private notebook for what you live between therapy sessions, adapted to each therapeutic approach.",
+    highlights: [
+      "Modes for CBT, psychodynamic, systemic and general use, each with its own way of recording",
+      "Searchable timeline; select entries to export a local PDF through the native share sheet",
+      "Offline-first with protected local data and optional Supabase sync with row-level security",
+      "No AI interpretation or diagnosis, and nothing shared automatically",
+      "Team project with sync conflict resolution, local backups and a large unit test suite",
+    ],
   },
   {
     id: "project-eight",
@@ -74,7 +93,14 @@ const products = [
     screenshots: ["/perfumehub1.png", "/perfumehub2.png", "/perfumehub3.png"],
     screenshotLayout: "portrait" as const,
     details:
-      "PerfumeHubBR is a native iOS app for the Brazilian fragrance market. It combines a catalog of more than 31,000 perfumes and 1,300 brands with features built around how people here actually buy: contratipos (cheaper alternatives to expensive designer scents), a batch inspector to evaluate a specific shipment, a virtual dressing table for your collection, an olfactory profile learned from it, and a weather-aware home that suggests what to wear given the heat. Under the hood it uses a zero-cost hybrid data architecture: Python pipelines compile and seed the catalog into Supabase's free tier with strict RLS, and the app keeps an aggressive offline cache in SwiftData, syncing with a cheap version check once per launch. Built with MVVM and Clean Architecture, Observation and a full test suite across Swift and Python. Still in development.",
+      "Fragrance discovery app for the Brazilian market, with a catalog of more than 31,000 perfumes.",
+    highlights: [
+      "Contratipos: find cheaper alternatives to expensive designer scents",
+      "Batch inspector, virtual dressing table and an olfactory profile learned from your collection",
+      "Weather-aware home that suggests what to wear for the heat",
+      "Zero-cost hybrid data: Python pipelines seed Supabase (RLS) and SwiftData keeps an offline cache with one version check per launch",
+      "MVVM and Clean Architecture with tests across Swift and Python",
+    ],
   },
   {
     id: "project-ten",
@@ -89,7 +115,13 @@ const products = [
     screenshots: ["/footage1.png", "/footage2.png", "/footage3.png"],
     screenshotLayout: "portrait" as const,
     details:
-      "Footage records a player's instep kick and extracts its biomechanics with a computer vision pipeline that runs entirely on the iPhone. Apple Vision's 3D human pose estimation tracks the body, a YOLOv11 model converted to Core ML detects the ball, and a shot event detector finds each strike in a continuous multi-shot session. From there it computes features such as knee flexion, hip rotation, torso lean, follow-through and balance, and breaks the technique score down into the stages of the kick: approach, plant, contact and follow-through, so the player knows exactly where points are lost. Every scored variable is traceable to sports biomechanics literature and nothing is a black box; features that cannot be validated are shown but not scored, a decision documented in ADRs after a pre-registered evaluation of the model. Complete and working, and continuously receiving improvements.",
+      "Record a soccer instep kick and get explainable biomechanics feedback, entirely on-device.",
+    highlights: [
+      "Apple Vision 3D pose estimation plus a YOLOv11 ball detector converted to Core ML",
+      "Detects each shot automatically in a continuous multi-shot session",
+      "Score broken down into approach, plant, contact and follow-through",
+      "Every scored feature is traceable to biomechanics literature; unvalidated ones are shown but not scored, documented in ADRs",
+    ],
   },
   {
     id: "project-eleven",
@@ -103,7 +135,13 @@ const products = [
     screenshots: ["/graffitone1.png"],
     screenshotLayout: "landscape" as const,
     details:
-      "Graffitone is an experimental visionOS musical instrument. Users paint music onto a wall: each spray can color is an isolated musical stem (bass, guitar, hi-hat, piano and snare loops), so the wall becomes a living sequencer where every stroke adds a layer to the song. It was designed to feel playful, tactile and immediate, never like a drawing app. Painting is rendered into textures instead of spawning entities, keeping painting and rendering separate so performance stays high in RealityKit, and finished pieces are saved to a cover-flow gallery with their audio. Built by a team of developers and a designer.",
+      "Experimental visionOS instrument where you paint music onto a wall with spray cans.",
+    highlights: [
+      "Each spray color is an isolated stem: bass, guitar, hi-hat, piano and snare",
+      "Painting is rendered into textures instead of spawning entities, keeping RealityKit fast",
+      "Cover-flow gallery of finished pieces with their audio",
+      "Built by a team of developers and a designer",
+    ],
   },
   {
     id: "project-twelve",
@@ -117,7 +155,13 @@ const products = [
     screenshots: [] as string[],
     screenshotLayout: "portrait" as const,
     details:
-      "Build Together helps teams run Scrum rituals in a simpler, more structured way. It focuses on two collaboration flows: estimation sessions, where the team discusses and votes on backlog items in real time, and retrospectives, where it captures what went well, what did not and what to improve. Around them sit projects, participants, teams and Sign in with Apple. The client is modular, built with The Composable Architecture and shared DesignSystem and SharedKit Swift packages, with one module per feature. The backend is a Vapor API with Fluent, PostgreSQL, JWT, WebSocket sessions, Docker and auto-generated OpenAPI docs, following an MVC plus repository pattern and GitFlow with a squad per feature. Built by a team of iOS and backend developers.",
+      "Workspace for Scrum rituals: real-time estimation sessions and retrospectives for teams.",
+    highlights: [
+      "Modular client built with The Composable Architecture and shared DesignSystem and SharedKit packages",
+      "Vapor backend with Fluent, PostgreSQL, JWT, WebSockets, Docker and auto-generated OpenAPI docs",
+      "Projects, participants, teams and Sign in with Apple",
+      "Team project with GitFlow and one squad per feature",
+    ],
   },
   {
     id: "project-five",
@@ -214,6 +258,7 @@ export default function Home() {
           key={product.id}
           {...product}
           id={index === 0 ? "projects" : product.id}
+          defaultExpanded={index < 2}
           reverse={index % 2 === 1}
         />
       ))}

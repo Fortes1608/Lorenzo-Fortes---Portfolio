@@ -16,6 +16,8 @@ type ProductSectionProps = {
   lightAccent: string;
   darkAccent: string;
   details: string;
+  highlights?: string[];
+  defaultExpanded?: boolean;
   techStack: string[];
   status?: string;
   githubUrl?: string;
@@ -130,13 +132,17 @@ export function ProductSection({
   darkAccent,
   appStoreUrl,
   details,
+  highlights,
+  defaultExpanded = false,
   githubUrl,
   iconSrc,
   screenshots,
   screenshotLayout,
   techStack,
 }: ProductSectionProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const hasPreview = screenshots.length > 0;
+  const isLandscape = screenshotLayout === "landscape";
 
   return (
     <SectionContainer className="pb-6 lg:pb-8">
@@ -163,6 +169,37 @@ export function ProductSection({
             style={{ backgroundColor: "var(--section-orb)" }}
           />
 
+          <AnimatePresence initial={false}>
+            {hasPreview && !expanded ? (
+              <motion.div
+                key="preview"
+                aria-hidden="true"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 12 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="pointer-events-none absolute right-28 top-5 z-0 hidden xl:block"
+              >
+                {screenshots.slice(0, isLandscape ? 1 : 2).map((src, index) => (
+                  <div
+                    key={src}
+                    className={`absolute overflow-hidden rounded-[1.3rem] border border-white/40 shadow-[0_24px_50px_rgba(15,23,42,0.22)] ${
+                      isLandscape ? "h-28 w-44" : "h-44 w-[5.25rem]"
+                    }`}
+                    style={{
+                      right: index * 64,
+                      top: index * 14,
+                      transform: `rotate(${index === 0 ? 7 : -3}deg)`,
+                      zIndex: 2 - index,
+                    }}
+                  >
+                    <Image src={src} alt="" fill className="object-cover" sizes="176px" />
+                  </div>
+                ))}
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+
           <button
             type="button"
             onClick={() => setExpanded((current) => !current)}
@@ -179,7 +216,7 @@ export function ProductSection({
               />
             </div>
 
-            <div className="min-w-0 flex-1">
+            <div className={`min-w-0 flex-1 ${hasPreview && !expanded ? "xl:pr-56" : ""}`}>
               <div className="mb-3 flex flex-wrap items-center gap-3">
                 <p className="section-eyebrow">{eyebrow}</p>
                 {status ? (
@@ -236,9 +273,26 @@ export function ProductSection({
                   }`}
                 >
                   <div className="max-w-[38rem]">
-                    <p className="text-lg leading-8 tracking-[-0.02em] text-muted">
-                      {details}
-                    </p>
+                    {highlights && highlights.length > 0 ? (
+                      <ul className="space-y-3.5">
+                        {highlights.map((item) => (
+                          <li
+                            key={item}
+                            className="flex gap-3 text-base leading-7 tracking-[-0.02em] text-muted"
+                          >
+                            <span
+                              aria-hidden="true"
+                              className="mt-[0.7rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--foreground)] opacity-60"
+                            />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-lg leading-8 tracking-[-0.02em] text-muted">
+                        {details}
+                      </p>
+                    )}
 
                     <div className="mt-8 flex flex-wrap gap-3">
                       {techStack.map((item) => (
