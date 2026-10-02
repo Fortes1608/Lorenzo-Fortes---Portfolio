@@ -17,8 +17,9 @@ type ProductSectionProps = {
   darkAccent: string;
   details: string;
   techStack: string[];
-  githubUrl: string;
-  appStoreUrl: string;
+  status?: string;
+  githubUrl?: string;
+  appStoreUrl?: string;
   iconSrc: string;
   screenshots: string[];
   screenshotLayout: ScreenshotLayout;
@@ -124,6 +125,7 @@ export function ProductSection({
   name,
   description,
   eyebrow,
+  status,
   lightAccent,
   darkAccent,
   appStoreUrl,
@@ -170,7 +172,7 @@ export function ProductSection({
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[1.7rem] border border-white/40 bg-white/55 shadow-[0_20px_50px_rgba(15,23,42,0.08)] backdrop-blur-xl">
               <Image
                 src={iconSrc}
-                alt={`${name} app icon placeholder`}
+                alt={`${name} app icon`}
                 fill
                 className="object-cover"
                 sizes="80px"
@@ -178,7 +180,20 @@ export function ProductSection({
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="section-eyebrow mb-3">{eyebrow}</p>
+              <div className="mb-3 flex flex-wrap items-center gap-3">
+                <p className="section-eyebrow">{eyebrow}</p>
+                {status ? (
+                  <span
+                    className="rounded-full border px-3 py-1 text-xs font-medium tracking-[-0.01em] text-muted backdrop-blur-md"
+                    style={{
+                      backgroundColor: "var(--pill-bg)",
+                      borderColor: "var(--pill-border)",
+                    }}
+                  >
+                    {status}
+                  </span>
+                ) : null}
+              </div>
               <h2 className="text-3xl font-semibold tracking-[-0.06em] text-foreground sm:text-4xl">
                 {name}
               </h2>
@@ -235,36 +250,51 @@ export function ProductSection({
                     </div>
 
                     <div className="mt-8 flex flex-wrap items-center gap-4">
-                      <a
-                        href={githubUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex rounded-full px-7 py-3.5 text-sm font-medium tracking-[-0.02em] shadow-[0_20px_40px_rgba(17,17,17,0.14)] transition-transform duration-300 hover:-translate-y-0.5"
-                        style={{
-                          backgroundColor: "var(--button-solid-bg)",
-                          color: "var(--button-solid-text)",
-                        }}
-                      >
-                        GitHub
-                      </a>
-                      <a
-                        href={appStoreUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex rounded-full border px-7 py-3.5 text-sm font-medium tracking-[-0.02em] text-foreground backdrop-blur-md transition-colors duration-300"
-                        style={{
-                          backgroundColor: "var(--pill-bg)",
-                          borderColor: "var(--pill-border)",
-                        }}
-                        onMouseEnter={(event) => {
-                          event.currentTarget.style.backgroundColor = "var(--pill-hover)";
-                        }}
-                        onMouseLeave={(event) => {
-                          event.currentTarget.style.backgroundColor = "var(--pill-bg)";
-                        }}
-                      >
-                        App Store
-                      </a>
+                      {githubUrl ? (
+                        <a
+                          href={githubUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex rounded-full px-7 py-3.5 text-sm font-medium tracking-[-0.02em] shadow-[0_20px_40px_rgba(17,17,17,0.14)] transition-transform duration-300 hover:-translate-y-0.5"
+                          style={{
+                            backgroundColor: "var(--button-solid-bg)",
+                            color: "var(--button-solid-text)",
+                          }}
+                        >
+                          GitHub
+                        </a>
+                      ) : null}
+                      {appStoreUrl ? (
+                        <a
+                          href={appStoreUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex rounded-full border px-7 py-3.5 text-sm font-medium tracking-[-0.02em] text-foreground backdrop-blur-md transition-colors duration-300"
+                          style={{
+                            backgroundColor: "var(--pill-bg)",
+                            borderColor: "var(--pill-border)",
+                          }}
+                          onMouseEnter={(event) => {
+                            event.currentTarget.style.backgroundColor = "var(--pill-hover)";
+                          }}
+                          onMouseLeave={(event) => {
+                            event.currentTarget.style.backgroundColor = "var(--pill-bg)";
+                          }}
+                        >
+                          App Store
+                        </a>
+                      ) : (
+                        <span
+                          aria-disabled="true"
+                          className="inline-flex cursor-default select-none rounded-full border px-7 py-3.5 text-sm font-medium tracking-[-0.02em] text-muted opacity-70 backdrop-blur-md"
+                          style={{
+                            backgroundColor: "var(--pill-bg)",
+                            borderColor: "var(--pill-border)",
+                          }}
+                        >
+                          App Store · Coming soon
+                        </span>
+                      )}
                     </div>
                   </div>
 
