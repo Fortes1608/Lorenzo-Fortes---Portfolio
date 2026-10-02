@@ -142,7 +142,7 @@ export function ProductSection({
     <SectionContainer className="pb-6 lg:pb-8">
       <Reveal offset={14}>
         <section
-          id={id === "project-one" ? "projects" : id}
+          id={id}
           className="project-surface relative overflow-hidden rounded-[2.6rem] border px-6 py-6 shadow-[0_30px_90px_rgba(15,23,42,0.07)] sm:px-8 lg:px-10"
           style={{
             borderColor: "var(--panel-border)",
@@ -228,7 +228,13 @@ export function ProductSection({
                 className="relative z-10 overflow-hidden"
               >
                 <div className="mt-8 h-px bg-[color:var(--pill-border)]" />
-                <div className="flex flex-col gap-12 pt-8 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(320px,760px)] xl:items-start xl:gap-16">
+                <div
+                  className={`flex flex-col gap-12 pt-8 ${
+                    screenshots.length > 0
+                      ? "xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(320px,760px)] xl:items-start xl:gap-16"
+                      : ""
+                  }`}
+                >
                   <div className="max-w-[38rem]">
                     <p className="text-lg leading-8 tracking-[-0.02em] text-muted">
                       {details}
@@ -298,13 +304,15 @@ export function ProductSection({
                     </div>
                   </div>
 
-                  <div className="flex items-start justify-center xl:justify-end">
-                    <ScreenshotShowcase
-                      name={name}
-                      screenshots={screenshots}
-                      screenshotLayout={screenshotLayout}
-                    />
-                  </div>
+                  {screenshots.length > 0 ? (
+                    <div className="flex items-start justify-center xl:justify-end">
+                      <ScreenshotShowcase
+                        name={name}
+                        screenshots={screenshots}
+                        screenshotLayout={screenshotLayout}
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </motion.div>
             ) : null}
