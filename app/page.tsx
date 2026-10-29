@@ -18,13 +18,41 @@ function brandGradients(primary: string, secondary: string = primary) {
 
 const products = [
   {
+    id: "project-nine",
+    name: "Ennoa",
+    description:
+      "A private notebook for what you live between therapy sessions, now on iPhone, iPad, Apple Watch and CarPlay.",
+    eyebrow: "App Store Project · Team",
+    ...brandGradients("#5B93CF", "#F08A4B"),
+    techStack: ["Swift", "SwiftUI", "SwiftData", "watchOS", "CarPlay", "Supabase", "Sign in with Apple"],
+    appStoreUrl: "https://apps.apple.com/br/app/ennoa/id6810774172?l=en-GB",
+    iconSrc: "/iconEnnoa.png",
+    screenshots: [
+      ...[1, 2, 3, 4, 5, 6, 7].map((n) => ({ src: `/ennoa-iphone-${n}.jpg`, device: "iPhone" as const })),
+      ...[1, 2, 3, 4, 5, 6, 7].map((n) => ({ src: `/ennoa-ipad-${n}.jpg`, device: "iPad" as const })),
+      ...[1, 2, 3, 4].map((n) => ({ src: `/ennoa-watch-${n}.jpg`, device: "Apple Watch" as const })),
+    ],
+    screenshotLayout: "portrait" as const,
+    details:
+      "A private notebook for what you live between therapy sessions, adapted to each therapeutic approach.",
+    highlights: [
+      "Available on iPhone, iPad, Apple Watch and CarPlay",
+      "Modes for CBT, psychodynamic, systemic and general use, each with its own way of recording",
+      "Searchable timeline; select entries to export a local PDF through the native share sheet",
+      "Offline-first with protected local data and optional Supabase sync with row-level security",
+      "No AI interpretation or diagnosis, and nothing shared automatically",
+      "Team project with sync conflict resolution, local backups and a large unit test suite",
+    ],
+  },
+  {
     id: "project-six",
     name: "Pip",
     description:
       "A gentle body fat tracker that turns two weekly photos into a private, judgement-free trend.",
-    eyebrow: "iOS Project",
+    eyebrow: "App Store Project",
     ...brandGradients("#EC5A36", "#FF8A6B"),
     techStack: ["Swift", "SwiftUI", "Vision", "HealthKit", "StoreKit 2", "Swift Charts"],
+    appStoreUrl: "https://apps.apple.com/br/app/pip-body-fat-tracker/id6816207291?l=en-GB",
     iconSrc: "/iconPip.png",
     screenshots: ["/pip1.png", "/pip2.png", "/pip3.png", "/pip4.png"],
     screenshotLayout: "portrait" as const,
@@ -56,28 +84,6 @@ const products = [
       "Privacy first: explicit AI consent, photos kept only in memory, no user accounts",
       "Care routine with reminders and streaks, barber-ready haircut cards and product recommendations",
       "RevenueCat subscriptions with a trial, a vintage barbershop design system and full PT-BR / English localization",
-    ],
-  },
-  {
-    id: "project-nine",
-    name: "Ennoa",
-    description:
-      "A private notebook for what you live between therapy sessions, adapted to each therapeutic approach.",
-    eyebrow: "iOS Project · Team",
-    status: "In Development",
-    ...brandGradients("#4A7BAE", "#A8C8E8"),
-    techStack: ["Swift", "SwiftUI", "SwiftData", "Supabase", "Sign in with Apple"],
-    iconSrc: "/iconEnnoa.png",
-    screenshots: ["/ennoa1.png", "/ennoa2.png"],
-    screenshotLayout: "portrait" as const,
-    details:
-      "A private notebook for what you live between therapy sessions, adapted to each therapeutic approach.",
-    highlights: [
-      "Modes for CBT, psychodynamic, systemic and general use, each with its own way of recording",
-      "Searchable timeline; select entries to export a local PDF through the native share sheet",
-      "Offline-first with protected local data and optional Supabase sync with row-level security",
-      "No AI interpretation or diagnosis, and nothing shared automatically",
-      "Team project with sync conflict resolution, local backups and a large unit test suite",
     ],
   },
   {
@@ -258,7 +264,7 @@ export default function Home() {
           key={product.id}
           {...product}
           id={index === 0 ? "projects" : product.id}
-          defaultExpanded={index < 2}
+          defaultExpanded={index === 0}
           reverse={index % 2 === 1}
         />
       ))}

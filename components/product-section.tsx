@@ -23,9 +23,49 @@ type ProductSectionProps = {
   githubUrl?: string;
   appStoreUrl?: string;
   iconSrc: string;
-  screenshots: string[];
+  screenshots: Screenshot[];
   screenshotLayout: ScreenshotLayout;
   reverse?: boolean;
+};
+
+type Device = "iPhone" | "iPad" | "Apple Watch";
+type Screenshot = string | { src: string; device: Device };
+
+const screenshotSrc = (shot: Screenshot) =>
+  typeof shot === "string" ? shot : shot.src;
+
+const frames: Record<
+  Device | "landscape",
+  { frame: string; aspect: string; thumb: string; sizes: string; thumbSizes: string }
+> = {
+  iPhone: {
+    frame: "max-w-[320px] lg:max-w-[340px] rounded-[2.2rem]",
+    aspect: "aspect-[9/19.5]",
+    thumb: "h-16 w-12",
+    sizes: "(max-width: 1024px) 320px, 340px",
+    thumbSizes: "48px",
+  },
+  iPad: {
+    frame: "max-w-[480px] rounded-[1.8rem]",
+    aspect: "aspect-[3/4]",
+    thumb: "h-16 w-12",
+    sizes: "480px",
+    thumbSizes: "48px",
+  },
+  "Apple Watch": {
+    frame: "max-w-[300px] rounded-[2.4rem] bg-black",
+    aspect: "aspect-[422/514]",
+    thumb: "h-14 w-[4.5rem]",
+    sizes: "300px",
+    thumbSizes: "72px",
+  },
+  landscape: {
+    frame: "max-w-[760px] rounded-[2.2rem]",
+    aspect: "aspect-[16/10]",
+    thumb: "h-16 w-24",
+    sizes: "(max-width: 1024px) 100vw, 760px",
+    thumbSizes: "96px",
+  },
 };
 
 function ScreenshotShowcase({
@@ -34,34 +74,73 @@ function ScreenshotShowcase({
   screenshotLayout,
 }: {
   name: string;
-  screenshots: string[];
+  screenshots: Screenshot[];
   screenshotLayout: ScreenshotLayout;
 }) {
+  const items = screenshots.map((shot) => ({
+    src: screenshotSrc(shot),
+    device: (typeof shot === "string"
+      ? screenshotLayout === "landscape"
+        ? "landscape"
+        : "iPhone"
+      : shot.device) as Device | "landscape",
+  }));
+  const devices = Array.from(new Set(items.map((item) => item.device)));
+  const [activeDevice, setActiveDevice] = useState(devices[0]);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const isLandscape = screenshotLayout === "landscape";
+  const deviceItems = items.filter((item) => item.device === activeDevice);
   const safeIndex =
-    activeIndex >= 0 && activeIndex < screenshots.length ? activeIndex : 0;
-  const activeSrc = screenshots[safeIndex] ?? screenshots[0];
+    activeIndex >= 0 && activeIndex < deviceItems.length ? activeIndex : 0;
+  const activeSrc = deviceItems[safeIndex]?.src ?? items[0].src;
+  const spec = frames[activeDevice];
 
   return (
     <div className="w-full">
+      {devices.length > 1 ? (
+        <div className="mb-5 flex justify-center">
+          <div
+            className="inline-flex gap-1 rounded-full border p-1 backdrop-blur-md"
+            style={{
+              backgroundColor: "var(--pill-bg)",
+              borderColor: "var(--pill-border)",
+            }}
+          >
+            {devices.map((device) => {
+              const selected = device === activeDevice;
+
+              return (
+                <button
+                  key={device}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => {
+                    setActiveDevice(device);
+                    setActiveIndex(0);
+                  }}
+                  className="rounded-full px-4 py-1.5 text-sm font-medium tracking-[-0.02em] transition-colors duration-300"
+                  style={{
+                    backgroundColor: selected ? "var(--button-solid-bg)" : "transparent",
+                    color: selected ? "var(--button-solid-text)" : "var(--foreground)",
+                  }}
+                >
+                  {device === "landscape" ? "Game" : device}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+
       <motion.div
-        className={`relative mx-auto overflow-hidden rounded-[2.2rem] border border-white/40 bg-white/72 shadow-[0_35px_90px_rgba(15,23,42,0.12)] backdrop-blur-xl ${
-          isLandscape
-            ? "max-w-[760px]"
-            : "max-w-[320px] lg:max-w-[340px]"
-        }`}
+        key={activeDevice}
+        className={`relative mx-auto overflow-hidden border border-white/40 bg-white/72 shadow-[0_35px_90px_rgba(15,23,42,0.12)] backdrop-blur-xl ${spec.frame}`}
         initial={{ opacity: 0, scale: 0.98, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[linear-gradient(180deg,rgba(255,255,255,0.34),transparent)]" />
-        <div
-          className={`relative overflow-hidden ${
-            isLandscape ? "aspect-[16/10]" : "aspect-[9/19.5]"
-          }`}
-        >
+        <div className={`relative overflow-hidden ${spec.aspect}`}>
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSrc}
@@ -73,31 +152,31 @@ function ScreenshotShowcase({
             >
               <Image
                 src={activeSrc}
-                alt={`${name} screenshot ${safeIndex + 1}`}
+                alt={`${name} ${activeDevice === "landscape" ? "" : activeDevice + " "}screenshot ${safeIndex + 1}`}
                 fill
                 className="object-cover"
-                sizes={isLandscape ? "(max-width: 1024px) 100vw, 760px" : "(max-width: 1024px) 320px, 340px"}
+                sizes={spec.sizes}
               />
             </motion.div>
           </AnimatePresence>
         </div>
       </motion.div>
 
-      {screenshots.length > 1 ? (
+      {deviceItems.length > 1 ? (
         <div className="mt-5 flex flex-wrap justify-center gap-3">
-          {screenshots.map((src, index) => {
+          {deviceItems.map((item, index) => {
             const selected = index === safeIndex;
 
             return (
               <button
-                key={src}
+                key={item.src}
                 type="button"
                 aria-label={`Show screenshot ${index + 1} for ${name}`}
                 aria-pressed={selected}
                 onClick={() => setActiveIndex(index)}
-                className={`relative overflow-hidden rounded-[1.2rem] border transition-all duration-300 ${
-                  isLandscape ? "h-16 w-24" : "h-16 w-12"
-                } ${selected ? "scale-[1.03]" : "opacity-80 hover:opacity-100"}`}
+                className={`relative overflow-hidden rounded-[1.2rem] border transition-all duration-300 ${spec.thumb} ${
+                  selected ? "scale-[1.03]" : "opacity-80 hover:opacity-100"
+                }`}
                 style={{
                   borderColor: selected ? "var(--foreground)" : "var(--pill-border)",
                   backgroundColor: "var(--pill-bg)",
@@ -107,11 +186,11 @@ function ScreenshotShowcase({
                 }}
               >
                 <Image
-                  src={src}
+                  src={item.src}
                   alt=""
                   fill
                   className="object-cover"
-                  sizes={isLandscape ? "96px" : "48px"}
+                  sizes={spec.thumbSizes}
                 />
               </button>
             );
@@ -143,6 +222,10 @@ export function ProductSection({
   const [expanded, setExpanded] = useState(defaultExpanded);
   const hasPreview = screenshots.length > 0;
   const isLandscape = screenshotLayout === "landscape";
+  const previewSrcs = screenshots
+    .filter((shot) => typeof shot === "string" || shot.device === "iPhone")
+    .map(screenshotSrc)
+    .slice(0, isLandscape ? 1 : 2);
 
   return (
     <SectionContainer className="pb-6 lg:pb-8">
@@ -180,7 +263,7 @@ export function ProductSection({
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 className="pointer-events-none absolute right-28 top-5 z-0 hidden xl:block"
               >
-                {screenshots.slice(0, isLandscape ? 1 : 2).map((src, index) => (
+                {previewSrcs.map((src, index) => (
                   <div
                     key={src}
                     className={`absolute overflow-hidden rounded-[1.3rem] border border-white/40 shadow-[0_24px_50px_rgba(15,23,42,0.22)] ${
